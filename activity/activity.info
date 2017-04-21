@@ -1,0 +1,7 @@
+[Activity]
+name = Expresar
+activity_version = 1
+bundle_id = py.pol.una.fp.2012.expresar
+exec = sugar-activity Expresar.Expresar
+icon = icon
+license = GPLv2+

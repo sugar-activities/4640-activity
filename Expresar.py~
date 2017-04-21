@@ -1,0 +1,99 @@
+# Copyright 2012 Miguel Ruiz Diaz, Pedro Amarilla
+# Actividad que permite a los usuarios con problemas motrices expresarse a traves de un teclado conceptual
+
+import gtk
+import logging
+
+from gettext import gettext as _
+
+from sugar.activity import activity
+from sugar.graphics.toolbarbox import ToolbarBox
+from sugar.activity.widgets import ActivityButton
+from sugar.activity.widgets import ActivityToolbox
+from sugar.activity.widgets import TitleEntry
+from sugar.activity.widgets import StopButton
+from sugar.activity.widgets import ShareButton
+
+class Expresar(activity.Activity):
+    """Expresar class as specified in activity.info"""
+
+	def __init__(self, handle):
+		"""Set up the Expresar activity."""
+		activity.Activity.__init__(self, handle)
+
+
+		# toolbar with the new toolbar redesign
+		toolbar_box = ToolbarBox()
+
+		activity_button = ActivityButton(self)
+		toolbar_box.toolbar.insert(activity_button, 0)
+		activity_button.show()
+
+		title_entry = TitleEntry(self)
+		toolbar_box.toolbar.insert(title_entry, -1)
+		title_entry.show()
+
+		separator = gtk.SeparatorToolItem()
+		separator.props.draw = False
+		separator.set_expand(True)
+		toolbar_box.toolbar.insert(separator, -1)
+		separator.show()
+
+		stop_button = StopButton(self)
+		toolbar_box.toolbar.insert(stop_button, -1)
+		stop_button.show()
+
+		self.set_toolbar_box(toolbar_box)
+		toolbar_box.show()
+
+
+		self.table = gtk.Table(4, 4)
+		self.create_interior(self.table)
+
+		self.window.show_all()
+
+		self._button_index = 0
+		gobject.timeout_add(DELAY, self.__timeout_cb, self.table)
+
+	def create_interior( self, table):
+		self.window.add(table)
+		uno = gtk.Button( "UNO")
+		dos = gtk.Button( "DOS")
+		tres = gtk.Button( "TRES")
+		cuatro = gtk.Button( "CUATRO")
+		#self.table.attach(child, left_attach, right_attach, top_attach, bottom_attach)
+		table.attach( uno, 0, 1, 0, 1)
+		uno.show()
+		table.attach( dos, 0, 1, 1, 2)
+		dos.show()
+		table.attach( tres, 0, 1, 2, 3)
+		tres.show()
+		table.attach( cuatro, 0, 1, 3, 4)
+		cuatro.show()
+
+		a = gtk.Button("A")
+		table.attach(a, 1, 2, 1, 2)
+		a.show()
+		b = gtk.Button("B")
+		table.attach(b, 2, 3, 1, 2)
+		b.show()
+		c = gtk.Button("C")
+		table.attach(c, 3, 4, 1, 2)
+		c.show()
+		# show the table
+		table.show()
+
+	def __timeout_cb(self, table):
+
+		buttonsV = table.get_children()
+		print buttonsV[1].get_label()
+		self._button_index = (self._button_index + 1) % len(buttonsV)
+
+		button = buttonsV[self._button_index]
+		button.grab_focus()
+
+		return True
+        # label with the text, make the string translatable
+        #label = gtk.Label(_("Hello World!"))
+        #self.set_canvas(label)
+        #label.show()
